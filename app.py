@@ -163,7 +163,7 @@ def fit_price_model(first_year, last_year):
 # ---------------------------------------------------------------------------
 if not DATA_FILE.exists():
     st.error(
-        "Processed data not found. Please run these two commands first:\n\n"
+        "Processed data was not found. Run these commands first:\n\n"
         "`python src/download_data.py`\n\n`python src/wrangle.py`"
     )
     st.stop()
@@ -207,15 +207,15 @@ year_range = st.sidebar.slider(
 
 with st.sidebar.expander("Compare similar flats only"):
     st.caption(
-        "Remaining lease and floor level also change prices. Narrow them to compare "
-        "more similar flats across towns and years."
+        "Remaining lease and floor level also affect prices. Narrow these ranges to "
+        "compare more similar flats across towns and years."
     )
     lease_min, lease_max = int(df["remaining_lease_years"].min()), int(np.ceil(df["remaining_lease_years"].max()))
     lease_range = st.slider("Remaining lease (years)", lease_min, lease_max, (lease_min, lease_max))
     floor_max = int(df["storey_mid"].max())
     floor_range = st.slider("Floor level", 1, floor_max, (1, floor_max))
 
-st.sidebar.subheader("Which towns")
+st.sidebar.subheader("Town comparison")
 towns = st.sidebar.multiselect(
     f"Towns to compare (up to {MAX_TOWNS})", all_towns,
     default=[t for t in DEFAULT_TOWNS if t in all_towns],
@@ -271,18 +271,17 @@ def change_vs_base(data, base_year, group_col=None):
 # ---------------------------------------------------------------------------
 st.title("HDB resale prices in Singapore")
 st.markdown(
-    "How much did prices rise after COVID, why do some flats cost more than others, "
-    "and which towns fit your budget?"
+    "How have resale prices changed since COVID? What factors are associated with higher "
+    "prices, and which towns fit your budget?"
 )
 st.caption(
-    f"{len(df):,} resale transactions from {df['month'].min():%b %Y} to "
-    f"{last_month:%b %Y}, published by HDB. The About & method tab explains how "
-    "prices are compared."
+    f"{len(df):,} HDB resale transactions from {df['month'].min():%b %Y} to "
+    f"{last_month:%b %Y}. See **About & method** for details on how prices are compared."
 )
 
 (tab_overview, tab_growth, tab_drivers, tab_map, tab_budget, tab_data,
  tab_about) = st.tabs([
-    "📈 Overview", "🏙️ Town growth", "🔍 Why are some flats pricier?",
+    "📈 Overview", "🏙️ Town growth", "🔍 What affects flat prices?",
     "🗺️ Map", "💰 Help me choose", "📄 Data", "ℹ️ About & method",
 ])
 
@@ -316,9 +315,9 @@ with tab_overview:
         )
     if len(town_pct):
         points.append(
-            f"Growth was uneven: in **%** terms **{town_pct.idxmax()}** rose most "
-            f"(**{town_pct.max():+.0f}%**) and **{town_pct.idxmin()}** least "
-            f"(**{town_pct.min():+.0f}%**). In **dollar** terms the biggest rise was in "
+            f"Growth varied by town: **{town_pct.idxmax()}** had the largest percentage "
+            f"increase (**{town_pct.max():+.0f}%**) and **{town_pct.idxmin()}** the smallest "
+            f"(**{town_pct.min():+.0f}%**). In **dollar** terms, the largest increase was in "
             f"**{town_sgd.idxmax()}** (**+{money_md(town_sgd.max())}**)."
         )
     if HAS_LOCATION:
@@ -327,9 +326,9 @@ with tab_overview:
         far = recent_type.loc[recent_type["mrt_dist_m"] >= 1200, "price_per_sqm"].median()
         if pd.notna(near) and pd.notna(far):
             points.append(
-                f"Location matters: flats **within 400 m of an MRT exit** sold for "
-                f"**{(near / far - 1) * 100:+.0f}%** more per sqm than flats 1.2 km+ away "
-                f"({FULL_YEAR}, before adjusting for lease or floor)."
+                f"Location matters: in {FULL_YEAR}, flats **within 400 m of an MRT exit** had "
+                f"a median price per sqm **{(near / far - 1) * 100:+.0f}%** higher than flats "
+                "at least 1.2 km away, before adjusting for lease or floor level."
             )
     points.append(
         f"Million-dollar HDB flats went from **{million_2019:,}** sales in {BASE_YEAR} to "
@@ -342,7 +341,7 @@ with tab_overview:
     end_data = ft_full[ft_full["year"] == end_y]
 
     if start_data.empty or end_data.empty or end_y <= start_y:
-        st.info("Pick at least two full years in the sidebar to compare.")
+        st.info("Select at least two full years in the sidebar to compare.")
     else:
         start_med = start_data[PRICE_COL].median()
         end_med = end_data[PRICE_COL].median()
@@ -351,29 +350,28 @@ with tab_overview:
         c1, c2, c3, c4 = st.columns(4)
         c1.metric(f"Median{unit}, {start_y}", money(start_med), border=True)
         c2.metric(f"Median{unit}, {end_y}", money(end_med), border=True)
-        c3.metric("Change in %", f"{(end_med / start_med - 1) * 100:+.0f}%", border=True)
-        c4.metric("Change in S$",
+        c3.metric("Percentage change", f"{(end_med / start_med - 1) * 100:+.0f}%", border=True)
+        c4.metric("Change (S$)",
                   ("+" if end_med >= start_med else "-") + money(abs(end_med - start_med)),
                   border=True)
         st.caption(
             f"{flat_type} flats in all towns"
             f"{', matching the lease and floor filters' if FILTERED else ''}, "
-            f"{len(end_data):,} sales in {end_y}. Median = the middle value. Full years only."
+            f"{len(end_data):,} sales in {end_y}. The median is the middle value. Full years only."
         )
 
     with st.container(border=True):
         st.markdown("##### Key takeaways")
         st.markdown("\n".join(f"- {p}" for p in points))
         st.caption(
-            f"Median total prices, all towns, pre-COVID {BASE_YEAR} vs {FULL_YEAR} "
-            f"(the last full year; {last_year} is incomplete). Change the flat type in "
+            f"Median total prices across all towns, comparing pre-COVID {BASE_YEAR} with "
+            f"{FULL_YEAR} (the latest full year; {last_year} is incomplete). Change the flat type in "
             "the sidebar to update."
         )
 
     # ---- Year-by-year change from the pre-COVID base year ----
     base = BASE_YEAR if year_range[0] <= BASE_YEAR else year_range[0]
     head, toggle = st.columns([3, 1], vertical_alignment="bottom")
-    head.subheader(f"How much higher than in {base}? Year by year")
     show_as = toggle.segmented_control("Show change as", ["%", "S$"], default="%",
                                        key="yearly_unit") or "%"
     yearly_all = change_vs_base(ft_full[ft_full["year"] >= base], base).assign(town="All towns")
@@ -382,10 +380,32 @@ with tab_overview:
     yearly = pd.concat([yearly_all, yearly_towns], ignore_index=True)
     yearly = yearly[yearly["year"] > base]
     if yearly.empty:
-        st.info("Pick a year range that covers at least two full years.")
+        head.subheader(f"More full years are needed to compare {flat_type} prices since {base}")
+        st.info("Choose a year range that includes at least two full years.")
     else:
         line_colors = {"All towns": "#6b7280", **town_colors(towns)}
         y_col = "pct_change" if show_as == "%" else "sgd_change"
+        latest_all = yearly_all[yearly_all["year"] > base].sort_values("year").iloc[-1]
+        latest_year = int(latest_all["year"])
+        latest_change = latest_all[y_col]
+        if show_as == "%":
+            change_display = f"{latest_change:+.0f}%"
+            measure_label = "price per sqm" if PRICE_COL == "price_per_sqm" else "resale price"
+        else:
+            change_display = money_md(abs(latest_change))
+            if PRICE_COL == "price_per_sqm":
+                change_display += " per sqm"
+            measure_label = "price per sqm" if PRICE_COL == "price_per_sqm" else "resale price"
+        if latest_change > 0:
+            change_summary = f"rose by {change_display}"
+        elif latest_change < 0:
+            change_summary = f"fell by {change_display}"
+        else:
+            change_summary = f"was unchanged ({change_display})"
+        head.subheader(
+            f"The median {measure_label} for {flat_type} flats {change_summary} "
+            f"from {base} to {latest_year}"
+        )
         fig = px.line(
             yearly, x="year", y=y_col, color="town", markers=True,
             color_discrete_map=line_colors,
@@ -409,7 +429,7 @@ with tab_overview:
         fig.update_xaxes(dtick=1)
         show(style_chart(fig, y_title=f"Change in {PRICE_NAME} since {base}"))
         st.caption(
-            f"For each year: ({PRICE_NAME} in that year ÷ {PRICE_NAME} in {base} − 1) × 100. "
+            f"For each year: ({PRICE_NAME} that year ÷ {PRICE_NAME} in {base} − 1) × 100. "
             f"Full years only, so {last_year} is not shown."
         )
 
@@ -428,11 +448,11 @@ with tab_overview:
         fig.update_layout(hovermode="x unified")
         show(style_chart(fig, y_title=PRICE_NAME.capitalize(), money_axis=True))
         st.caption(
-            "Quarterly median, so the latest quarters can be shown even though "
+            "Quarterly medians include the latest quarters, even though "
             f"{last_year} is incomplete (move the Years slider to {last_year} to include it)."
         )
     else:
-        st.info("Pick at least one town in the sidebar.")
+        st.info("Select at least one town in the sidebar.")
 
     st.subheader("Million-dollar HDB flats are no longer rare")
     million = (
@@ -454,15 +474,13 @@ with tab_overview:
 # Tab 2: Which towns grew the most?
 # ---------------------------------------------------------------------------
 with tab_growth:
-    st.subheader(f"Which towns saw the biggest price increase? ({flat_type})")
-
     col_a, col_b, col_c = st.container(border=True).columns(3)
     base_year = col_a.selectbox(
-        "Compare from", FULL_YEARS[:-1], index=FULL_YEARS.index(BASE_YEAR),
+        "Base year", FULL_YEARS[:-1], index=FULL_YEARS.index(BASE_YEAR),
         help=f"{BASE_YEAR} is the last full year before COVID.",
     )
     later_years = [y for y in FULL_YEARS if y > base_year]
-    comp_year = col_b.selectbox("to", later_years, index=len(later_years) - 1,
+    comp_year = col_b.selectbox("Compare with", later_years, index=len(later_years) - 1,
                                 help=f"Only full years. {last_year} is incomplete.")
     rank_by = col_c.segmented_control("Rank towns by", ["% change", "S$ change"],
                                       default="% change") or "% change"
@@ -496,8 +514,23 @@ with tab_growth:
     )
 
     if growth.empty:
-        st.info("Not enough transactions to compare these years. Try wider lease/floor filters.")
+        st.subheader(
+            f"Current filters leave too few sales to compare {flat_type} price growth by town"
+        )
+        st.info("Not enough transactions to compare these years. Try widening the lease and floor filters.")
     else:
+        leading_town = growth.loc[growth[rank_col].idxmax()]
+        rank_measure = "percentage" if rank_by == "% change" else "dollar"
+        leading_change = leading_town[rank_col]
+        if leading_change > 0:
+            growth_conclusion = f"{leading_town['town']} had the largest {rank_measure} increase"
+        elif leading_change < 0:
+            growth_conclusion = f"{leading_town['town']} had the smallest {rank_measure} decline"
+        else:
+            growth_conclusion = f"{leading_town['town']} had no {rank_measure} change"
+        st.subheader(
+            f"For {flat_type} flats, {growth_conclusion} from {base_year} to {comp_year}"
+        )
         fig = px.bar(
             growth, x=rank_col, y="town", orientation="h", color="group",
             color_discrete_map={"Selected town": MAIN_BLUE, "Other town": LIGHT_BLUE},
@@ -524,16 +557,17 @@ with tab_growth:
         low_pct = growth.loc[growth["change_pct"].idxmin()]
         top_sgd = growth.loc[growth["change_sgd"].idxmax()]
         st.markdown(
-            f"In **%** terms, **{top_pct['town']}** grew the most "
-            f"(**{top_pct['change_pct']:+.0f}%**) and **{low_pct['town']}** the least "
-            f"(**{low_pct['change_pct']:+.0f}%**). In **S\\$** terms, the largest rise was in "
+            f"By percentage, **{top_pct['town']}** had the largest increase "
+            f"(**{top_pct['change_pct']:+.0f}%**) and **{low_pct['town']}** the smallest "
+            f"(**{low_pct['change_pct']:+.0f}%**). By **S\\$**, the largest increase was in "
             f"**{top_sgd['town']}** (**+{money_md(top_sgd['change_sgd'])}**"
             f"{' per sqm' if PRICE_COL == 'price_per_sqm' else ''}). "
-            "A town that was already expensive can show a big dollar rise with a modest "
-            "% rise, so we report both. Towns with fewer than 20 sales in either year are left out."
+            "A town with higher starting prices can have a large dollar increase but a "
+            "modest percentage increase, so we report both. Towns with fewer than 20 sales "
+            "in either year are excluded."
         )
 
-        with st.expander("Full table: % and S$ change by town"):
+        with st.expander("Full table: percentage and S$ change by town"):
             table = growth.sort_values(rank_col, ascending=False)[
                 ["town", "base_price", "comp_price", "change_pct", "change_sgd",
                  "base_sales", "comp_sales"]]
@@ -550,11 +584,20 @@ with tab_growth:
                 },
             )
 
-        st.subheader("Did cheaper towns catch up?")
         # Label only the 3 fastest- and 3 slowest-growing towns to avoid clutter
         ranked = growth.sort_values("change_pct")
         label_towns = set(ranked["town"].head(3)) | set(ranked["town"].tail(3))
         growth["label"] = growth["town"].where(growth["town"].isin(label_towns), "")
+        corr = growth["base_price"].corr(growth["change_pct"])
+        if abs(corr) < 0.2:
+            growth_conclusion = "starting prices had little relationship with subsequent growth"
+        elif corr < 0:
+            growth_conclusion = "lower-priced towns tended to grow faster"
+        else:
+            growth_conclusion = "higher-priced towns tended to grow faster"
+        st.subheader(
+            f"For {flat_type} flats from {base_year} to {comp_year}, {growth_conclusion}"
+        )
         fig = px.scatter(
             growth, x="base_price", y="change_pct", hover_name="town", text="label",
             color_discrete_sequence=[MAIN_BLUE],
@@ -568,28 +611,27 @@ with tab_growth:
         fig.update_xaxes(tickprefix="$", tickformat=",.0f")
         fig.update_yaxes(ticksuffix="%")
         show(style_chart(fig, x_title=f"{PRICE_NAME.capitalize()} in {base_year}", y_title="% change"))
-        corr = growth["base_price"].corr(growth["change_pct"])
-        direction = "cheaper" if corr < 0 else "more expensive"
         st.caption(
-            f"Each dot is a town. Correlation = {corr:.2f}: on average, towns that were "
-            f"{direction} in {base_year} grew {'a bit ' if abs(corr) < 0.4 else ''}faster."
+            f"Each dot represents a town. The correlation between its {base_year} median "
+            f"price and subsequent price growth is {corr:.2f}."
         )
         st.info(
-            "💡 **Careful when reading growth:** a town's median can rise partly because "
-            "the *mix* of flats sold changed (e.g. newer flats with long leases start being "
-            "resold). Use **Compare similar flats only** in the sidebar to hold lease and "
-            "floor level roughly fixed, and see the 'Why are some flats pricier?' tab."
+            "💡 **Interpret growth with care:** a town's median can rise partly because "
+            "the *mix* of flats sold has changed (for example, newer flats with longer "
+            "leases have entered the resale market). Use **Compare similar flats only** "
+            "in the sidebar to keep lease length and floor level roughly consistent. "
+            "See the **What affects flat prices?** tab for more detail."
         )
 
 # ---------------------------------------------------------------------------
-# Tab 3: What makes a flat more valuable?
+# Tab 3: What affects flat prices?
 # ---------------------------------------------------------------------------
 with tab_drivers:
     st.markdown(
-        f"Same flat type ({flat_type}), {year_range[0]}-{year_range[1]}, all towns"
-        f"{', matching the lease/floor filters' if FILTERED else ''}. "
-        "We use **price per square metre** where size could distort the comparison. "
-        "The story has three parts: **the flat itself**, **its location**, and "
+        f"Showing {flat_type} flats sold from {year_range[0]} to {year_range[1]} across all towns"
+        f"{', filtered by lease length and floor level' if FILTERED else ''}. "
+        "We use **price per square metre** where flat size could distort a comparison. "
+        "We look at three groups of factors: **the flat itself**, **its location**, and "
         "**all factors together**."
     )
 
@@ -606,8 +648,8 @@ with tab_drivers:
         show(style_chart(fig, x_title="Remaining lease at sale", y_title="Median price per sqm", money_axis=True))
         st.caption(
             "HDB flats have 99-year leases, so a shorter remaining lease means less time "
-            "left to own the flat. The oldest flats (< 60 yrs) are often in central towns, "
-            "so a good location can partly make up for a short lease."
+            "left to own the flat. Flats with fewer than 60 years of lease remaining are "
+            "often in central towns, so their location may partly offset the shorter lease."
         )
 
     with right:
@@ -635,13 +677,14 @@ with tab_drivers:
     show(style_chart(fig, y_title="Median resale price", money_axis=True))
     st.caption(
         "Mature estates are older towns with more established amenities "
-        "(shops, MRT lines, schools). The gap shows what buyers pay for that. "
+        "(shops, MRT lines, and schools). The difference reflects the price premium "
+        "associated with these estates; it does not isolate the effect of amenities. "
         "Full years only."
     )
 
     if not HAS_LOCATION:
         st.info(
-            "MRT and CBD distances are not available yet. Run "
+            "MRT and CBD distances are unavailable. Run "
             "`python src/download_mrt.py`, `python src/building_coords.py`, "
             "`python src/geocode_blocks.py` and `python src/wrangle.py` to add them."
         )
@@ -697,9 +740,9 @@ with tab_drivers:
         st.markdown("### 3. Putting it all together")
         st.markdown(
             "Each chart above looks at **one** factor at a time, but the factors overlap: "
-            "flats near the city are also older, for example. A **regression** compares "
-            "flats that are alike in every other factor, so we can see each factor's own link "
-            "with price. It uses all flat types in the chosen years."
+            "flats near the city are also older, for example. A **regression** estimates "
+            "the association between each factor and price while accounting for the others. "
+            "It uses all flat types in the selected years."
         )
         effects, r2, n_obs = fit_price_model(*year_range)
         effects = effects.sort_values("pct")
@@ -713,15 +756,16 @@ with tab_drivers:
         fig.update_traces(marker_cornerradius=4, hovertemplate="%{y}: %{x:+.1f}%<extra></extra>")
         fig.update_xaxes(ticksuffix="%", zeroline=True, zerolinecolor="gray")
         fig.update_layout(showlegend=False, height=320)
-        show(style_chart(fig, x_title="Change in price, holding the other factors equal"))
+        show(style_chart(fig, x_title="Price change, holding other factors constant"))
 
         lookup = effects.set_index("effect")["pct"]
         st.markdown(
-            f"For example, being **100 m further from an MRT exit** goes with a "
-            f"**{lookup['+100 m further from MRT']:+.1f}%** price, and every **extra 10 years "
-            f"of lease** with **{lookup['+10 years remaining lease']:+.1f}%**, for flats that "
-            f"are otherwise alike. The model explains **{r2:.0%}** of the variation in "
-            f"(log) prices across {n_obs:,} sales."
+            f"For example, each additional **100 m from an MRT exit** is associated with a "
+            f"**{lookup['+100 m further from MRT']:+.1f}% change in price**. An additional "
+            f"**10 years of remaining lease** is associated with a "
+            f"**{lookup['+10 years remaining lease']:+.1f}% change**, comparing flats that "
+            f"are alike in the other factors. The model explains **{r2:.0%}** of the "
+            f"variation in log prices across {n_obs:,} sales."
         )
         with st.expander("How to read this (and what it cannot tell us)"):
             st.markdown(
@@ -740,13 +784,13 @@ with tab_drivers:
 # Tab: Map
 # ---------------------------------------------------------------------------
 with tab_map:
-    st.subheader(f"Where are {flat_type} flats most expensive?")
     if not HAS_LOCATION:
-        st.info("The map needs block locations. Run `python src/building_coords.py` and "
+        st.subheader(f"Map locations are unavailable for {flat_type} flats")
+        st.info("Block locations are unavailable. Run `python src/building_coords.py` and "
                 "`python src/geocode_blocks.py` first.")
     else:
         map_start = last_month - pd.DateOffset(months=23)
-        only_selected = st.checkbox("Only show towns selected in the sidebar", value=False)
+        only_selected = st.checkbox("Show only towns selected in the sidebar", value=False)
         recent_map = df[
             (df["flat_type"] == flat_type) & (df["month"] >= map_start) & df["lat"].notna()
         ]
@@ -763,8 +807,16 @@ with tab_map:
         blocks["address"] = blocks["block"] + " " + blocks["street_name"].str.title()
 
         if blocks.empty:
+            st.subheader(f"No mapped sales were found for {flat_type} flats in this period")
             st.info("No sales to show for these settings.")
         else:
+            highest_price_town = (
+                blocks.groupby("town")["price_per_sqm"].median().idxmax()
+            )
+            st.subheader(
+                f"Among mapped blocks, {highest_price_town} had the highest median price "
+                f"per sqm for {flat_type} flats"
+            )
             low, high = blocks["price_per_sqm"].quantile([0.05, 0.95])
             fig = px.scatter_map(
                 blocks, lat="lat", lon="lon", color="price_per_sqm",
@@ -779,7 +831,7 @@ with tab_map:
                 hovertemplate=(
                     "<b>%{hovertext}</b> (%{customdata[0]})<br>"
                     "Median price: %{customdata[1]:$,.0f}<br>"
-                    "Per sqm: %{customdata[2]:$,.0f}<br>"
+                    "Price per sqm: %{customdata[2]:$,.0f}<br>"
                     "Sales: %{customdata[3]}<br>"
                     "Nearest MRT: %{customdata[4]} (%{customdata[5]:,.0f} m)<extra></extra>"
                 ),
@@ -789,19 +841,20 @@ with tab_map:
                 station_layer = px.scatter_map(stations, lat="lat", lon="lon", hover_name="station")
                 station_layer.update_traces(
                     marker=dict(size=6, color="#eb6834"), name="MRT/LRT station",
-                    hovertemplate="<b>%{hovertext}</b> station<extra></extra>",
+                    hovertemplate="<b>%{hovertext}</b> MRT/LRT station<extra></extra>",
                 )
                 fig.add_traces(station_layer.data)
             fig.update_layout(
                 margin=dict(l=0, r=0, t=0, b=0),
-                coloraxis_colorbar=dict(title="Per sqm", tickprefix="$", tickformat=",.0f"),
+                coloraxis_colorbar=dict(title="Price per sqm", tickprefix="$", tickformat=",.0f"),
                 showlegend=False,
             )
             show(fig)
             st.caption(
-                f"Each blue dot is an HDB block with {flat_type} sales from "
-                f"{map_start:%b %Y} to {last_month:%b %Y}; darker = higher median price per "
-                "sqm. Orange dots are MRT/LRT stations. Zoom and hover for details."
+                f"Each blue dot represents an HDB block with {flat_type} sales from "
+                f"{map_start:%b %Y} to {last_month:%b %Y}. Darker dots indicate a higher "
+                "median price per sqm. Orange dots mark MRT/LRT stations. Zoom in and hover "
+                "over the dots for details."
             )
 
 # ---------------------------------------------------------------------------
@@ -855,7 +908,10 @@ with tab_budget:
 
         good = summary[summary["share_within"] >= 50].sort_values("share_within", ascending=False)
         if good.empty:
-            st.warning(f"In no town were at least half of recent sales within {money_md(budget)}.")
+            st.warning(
+                f"None of the towns with at least 10 matching sales had half or more of "
+                f"their recent sales within {money_md(budget)}."
+            )
         else:
             st.success(
                 f"In **{len(good)} towns**, at least half of recent {flat_type} sales "
@@ -879,7 +935,9 @@ with tab_budget:
         fig.update_layout(height=max(400, 24 * len(summary)))
         fig.update_xaxes(range=[0, 100], ticksuffix="%")
         show(style_chart(fig, x_title="Share of recent sales at or below my budget"))
-        st.caption("Towns with fewer than 10 matching sales are hidden. Dotted line = 50%.")
+        st.caption(
+            "Towns with fewer than 10 matching sales are hidden. The dotted line marks 50%."
+        )
 
         with st.expander("Show as a table"):
             table = summary.sort_values("share_within", ascending=False).rename(columns={
@@ -917,9 +975,9 @@ with tab_budget:
             shortlist.insert(0, "address", shortlist["block"] + " " + shortlist["street_name"].str.title())
             shortlist = shortlist.drop(columns=["block", "street_name"])
             st.write(
-                f"**{len(shortlist):,} blocks** in the chosen towns had at least one "
+                f"**{len(shortlist):,} blocks** in the selected towns had at least one "
                 f"{flat_type} sale within {money_md(budget)} in the last 12 months. "
-                "Blocks with more sales are listed first: they are easier to find again."
+                "Blocks with more matching sales are listed first."
             )
             st.dataframe(
                 shortlist, hide_index=True, width="stretch",
@@ -932,8 +990,8 @@ with tab_budget:
                 },
             )
             st.caption(
-                "Past sales are a guide, not a promise: the same block can sell for more today, "
-                "and each flat's condition and floor differ."
+                "Past sales are a guide, not a guarantee. Prices may have changed since those "
+                "sales, and individual flats vary in condition and floor level."
             )
 
 # ---------------------------------------------------------------------------
@@ -969,7 +1027,7 @@ with tab_data:
             "cbd_dist_km": st.column_config.NumberColumn("CBD distance (km)", format="%.1f"),
         },
     )
-    st.caption("Showing the latest 5,000 rows. Download for the full filtered data.")
+    st.caption("Showing the latest 5,000 rows. Download the CSV for all filtered transactions.")
     st.download_button(
         "⬇️ Download filtered data (CSV)",
         shown[cols].to_csv(index=False).encode("utf-8"),
@@ -983,46 +1041,48 @@ with tab_data:
 with tab_about:
     st.subheader("What this dashboard is for")
     st.markdown(
-        "We study HDB **resale** prices from 2017 to 2026 to answer three questions:\n"
-        f"1. **Growth:** which towns saw the biggest price increases after COVID ({BASE_YEAR} "
-        "vs later years), in both **%** and **S\\$**?\n"
-        "2. **Drivers:** why are some flats and locations more valuable (lease, floor, "
-        "mature estate, distance to MRT and to the city centre)?\n"
-        "3. **Decision support:** which towns and blocks fit a buyer's budget and needs?"
+        f"We study HDB **resale** prices from {first_year} to {last_year} to answer three "
+        "questions:\n"
+        f"1. **Price growth:** how have prices changed since COVID? We compare {BASE_YEAR} "
+        "with later years, in both **%** and **S\\$** terms.\n"
+        "2. **Price factors:** how are lease length, floor level, estate type, and distance "
+        "to MRT stations and the city centre associated with resale prices?\n"
+        "3. **Decision support:** which towns and blocks match a buyer's budget and needs?"
     )
 
     st.subheader("How we compare prices across years")
     st.markdown(
-        f"- For every **town and year** we take the **median** of the chosen price measure "
-        f"(**price per sqm** by default, or total price). The median is the middle value, so "
-        "a few very expensive flats do not pull it up.\n"
+        f"- For each **town and year**, we calculate the **median** of the selected price "
+        f"measure (**price per sqm** by default, or total price). The median is the middle "
+        "value, so a few very expensive flats have less influence on it.\n"
         f"- **% change** from a base year = (median in year ÷ median in base year − 1) × 100. "
         f"The default base year is **{BASE_YEAR}**, the last full year before COVID.\n"
-        "- **S\\$ change** = median in year − median in base year. We show both, because a "
-        "town that was already expensive can have a large dollar increase with a small "
-        "% increase, and the other way round.\n"
-        f"- **Only full years** are compared. {last_year} only has data up to "
-        f"{last_month:%B}, so it is left out of every year-to-year comparison; it only "
-        "appears in the quarterly trend chart (if you include it with the Years slider), "
-        "in the map and in the 'Help me choose' tab (last 12 months).\n"
-        "- A town is only ranked if it has **at least 20 sales** in both years compared."
+        "- **S\\$ change** = median in the comparison year − median in the base year. We show "
+        "both measures because a town with high starting prices can have a large dollar "
+        "increase but a small percentage increase, or vice versa.\n"
+        f"- We compare **full years only**. {last_year} has data only through "
+        f"{last_month:%B}, so it is excluded from year-over-year comparisons. It appears in "
+        "the quarterly trend chart (if included with the Years slider), the map, and the "
+        "**Help me choose** tab, which uses the latest 12 months of data.\n"
+        "- A town is ranked only if it has **at least 20 sales** in both comparison years."
     )
 
     st.subheader("Making the comparisons fair")
     st.markdown(
-        "Comparing medians can mislead when towns sell different kinds of flats. We deal "
-        "with this in four ways:\n"
+        "Comparing medians can be misleading when towns sell different types of flats. "
+        "We address this in four ways:\n"
         "- **Same flat type** (chosen in the sidebar), since a 5-room flat costs more than "
         "a 3-room one.\n"
         "- **Price per sqm**, which removes most of the effect of flat size.\n"
-        "- **Compare similar flats only** (sidebar): limit the remaining lease and floor "
-        "level, which also affect prices.\n"
-        "- A **regression** in the 'Why are some flats pricier?' tab estimates the link "
-        "between price and each factor (size, lease, floor, MRT distance, CBD distance, "
-        "flat type, year) while holding the others fixed.\n\n"
+        "- **Compare similar flats only** (sidebar): filter by remaining lease and floor "
+        "level, both of which also affect prices.\n"
+        "- A **regression** in the **What affects flat prices?** tab estimates the "
+        "association between price and each factor (size, lease, floor, MRT distance, "
+        "CBD distance, flat type, and year) while holding the others constant.\n\n"
         "Even so, a town's median can change because a different **mix** of flats was "
-        "sold in a year (for example, newer flats reaching the 5-year minimum occupation "
-        "period), not only because the same flats became more expensive."
+        "sold in a year (for example, newer flats entering the resale market after the "
+        "5-year minimum occupation period), rather than solely because the same flats "
+        "became more expensive."
     )
 
     st.subheader("Other limitations")

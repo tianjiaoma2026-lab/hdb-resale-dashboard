@@ -25,7 +25,8 @@ Use ● for main responsibility and ○ for support.
 
 ## Sun Jiayi
 
--
+- Edited and adjusted `app.py` , fix the parts with unclear logic, improve English wording in dashboard titles, explanatory text, and chart labels.
+- Prepared the PowerPoint presentation and presentation materials.
 
 ## Deng Shenbojia
 
