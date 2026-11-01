@@ -130,7 +130,7 @@ streamlit run app.py
 |---|---|
 | 📈 Overview | Key takeaways; % and S$ change since 2019, year by year; quarterly price trend in chosen towns; growth of $1M+ flats |
 | 🏙️ Town growth | Which towns grew most since 2019, ranked by **% or S$ change**? Did cheaper towns catch up? |
-| 🔍 Why are some flats pricier? | Lease, floor, mature estate, MRT distance, CBD distance, and the regression putting them together |
+| 🔍 What affects flat prices? | Lease, floor, mature estate, MRT distance, CBD distance, and the regression putting them together |
 | 🗺️ Map | Where are flats most expensive per sqm? Where are MRT stations? |
 | 💰 Help me choose | Which towns fit my budget, minimum lease and MRT distance? Which blocks sold within budget? |
 | 📄 Data | Filtered data table and CSV download |
@@ -144,7 +144,7 @@ Sidebar filters: flat type, price measure (per sqm or total), years, towns, and 
 |---|---|
 | ![Overview tab: 2019 vs 2025, 4-room, price per sqm](outputs/figures/dashboard_01_overview.png) **Overview** (years 2019–2025) | ![Help me choose tab: $650k budget, 60+ years lease, 3-room](outputs/figures/dashboard_05_help_me_choose.png) **Help me choose** ($650k, 60+ years lease, 3-room) |
 | ![Town growth tab ranked by % change](outputs/figures/dashboard_02a_town_growth_pct.png) **Town growth by %** (total price, 2019→2025) | ![Town growth tab ranked by S$ change](outputs/figures/dashboard_02b_town_growth_sgd.png) **Town growth by S$** (same towns, different order) |
-| ![Why are some flats pricier tab: MRT and CBD distance, 2025](outputs/figures/dashboard_03_drivers_mrt.png) **Why are some flats pricier?** (2025 only) | ![Map tab: price per sqm by block with MRT stations](outputs/figures/dashboard_04_map.png) **Map** (4-room, last 24 months) |
+| ![What affects flat prices tab: MRT and CBD distance, 2025](outputs/figures/dashboard_03_drivers_mrt.png) **What affects flat prices?** (2025 only) | ![Map tab: price per sqm by block with MRT stations](outputs/figures/dashboard_04_map.png) **Map** (4-room, last 24 months) |
 
 ## 8. Key findings
 
