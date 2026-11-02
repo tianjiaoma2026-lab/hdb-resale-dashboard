@@ -2,31 +2,34 @@
 
 This project was completed as group work for **DS608 Data Analytics for Economics** (SMU, MSc in Data Science) by three students.
 
-> **Draft — each member please fill in your own row and section.** Be specific; GitHub commit history should support what is written here.
+> Contributions are summarised below based on each member’s work on the project.
 
 ## Summary
 
 | Area | Ma Tianjiao | Sun Jiayi | Deng Shenbojia |
 |---|---|---|---|
-| Topic and proposal | | | |
-| Data download and documentation | | | |
-| Data cleaning (`src/wrangle.py`) | | | |
-| Location data (MRT, geocoding) | | | |
+| Topic and proposal | ● | ○ | ○ |
+| Data download and documentation | ● | | |
+| Data cleaning (`src/wrangle.py`) | ● | | |
+| Location data (MRT, geocoding) | ● | | |
 | Analysis and interpretation | | | ● |
-| Dashboard (`app.py`) | | | |
-| Presentation deck | | | ○ |
-| Repository organisation and review | | | ○ |
+| Dashboard (`app.py`) | ● | ○ | |
+| Presentation deck | | ● | ○ |
+| Repository organisation and review | ● | ○ | ○ |
 
 Use ● for main responsibility and ○ for support.
 
 ## Ma Tianjiao
 
-- _e.g. Found the HDB dataset and wrote the download and cleaning scripts; built the first version of the dashboard; added MRT distance and the map after TA feedback._
+- Found the HDB dataset and wrote the download and cleaning scripts; built the first version of the dashboard; added MRT distance and the map after TA feedback.
+- Coordinated the shared GitHub workflow, keeping project code, data documentation, analysis outputs, and presentation materials organised. Helped review changes submitted through branches and pull requests before they were merged into `main`.
+
 
 ## Sun Jiayi
 
-- Edited and adjusted `app.py` , fix the parts with unclear logic, improve English wording in dashboard titles, explanatory text, and chart labels.
-- Prepared the PowerPoint presentation and presentation materials.
+- Refining `app.py`, including clarifying dashboard logic and polishing the English wording of titles, explanatory text, and chart labels.
+- Reviewing and updating the dashboard and project Markdown files to keep their descriptions, methods, and findings consistent.
+- Preparing the PowerPoint presentation and supporting presentation materials.
 
 ## Deng Shenbojia
 
@@ -38,7 +41,7 @@ Use ● for main responsibility and ○ for support.
 ## How we worked together
 
 - One shared GitHub repository; each member worked on their own branch and opened pull requests, which another member reviewed before merging into `main`.
-- _Add how you split tasks and communicated (e.g. weekly meetings, group chat)._
+- We held weekly meetings on Mondays to set our work plan for the week, and used a group chat to discuss and adjust the details.
 
 ## Personal portfolio statement (template)
 
