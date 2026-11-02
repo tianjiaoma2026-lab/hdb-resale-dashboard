@@ -160,7 +160,9 @@ def fig_town_ranking(g, end_year):
     ax.xaxis.set_major_formatter(mtick.PercentFormatter(decimals=0))
     ax.grid(axis="y", visible=False)
     ax.tick_params(axis="y", length=0, labelsize=11, labelcolor=INK)
-    ax.set_title(f"Which towns' prices grew most, {BASE_YEAR} → {end_year}?")
+    top, bottom = g.index[-1], g.index[0]      # g is sorted from smallest to largest growth
+    ax.set_title(f"{top} grew most (+{g.loc[top, 'pct']:.0f}%) and {bottom} least "
+                 f"(+{g.loc[bottom, 'pct']:.0f}%), {BASE_YEAR} → {end_year}")
     subtitle(ax, f"Change in median 4-room resale price: % (bar) and S$ (in brackets). "
                  f"Towns with < {MIN_SALES} sales left out")
     source(fig)
