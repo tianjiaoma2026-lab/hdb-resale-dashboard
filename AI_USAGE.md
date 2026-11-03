@@ -18,6 +18,9 @@ We acknowledge the use of **Claude (Anthropic)** to support **coding, debugging,
 - **Extend the analysis after TA feedback:** suggest adding distance to the nearest MRT exit and to the CBD, an interactive map, and a regression that holds other factors equal.
 - **Documentation:** draft `README.md`, `data/DATA_SOURCES.md` and this file.
 - **Figures and interpretation (Deng Shenbojia):** Assist in writing `src/make_figures.py` for the static Matplotlib and Seaborn charts in `outputs/figures/`; explain the findings to me (e.g. why % and S$ rankings differ, why MRT distance and lease length are mixed together) and suggest plainer wording for the *Key findings* and *Limitations* sections of the README.
+- **Course alignment and review (Ma Tianjiao):** compare the project with Lectures 8–9 to find gaps, which we then assigned to members (Seaborn distribution figures, conclusion-style titles); help review members' pull requests, including running the dashboard to check for errors, and suggest the fix for the map title.
+- **Presentation (Ma Tianjiao):** draft the slide deck (structure, slide text and speaker notes) from the findings in this README.
+- **Deployment (Ma Tianjiao):** after Ma Tianjiao signed in, Claude filled in the Streamlit Community Cloud form in the browser to deploy the dashboard from this repository.
 
 Sun Jiayi used **GitHub Copilot** to refine dashboard titles and text in `app.py`, and to check project files for details and consistency.
 
@@ -25,12 +28,13 @@ The types of prompts used included: describing our research question and the pro
 
 ## How we checked the output
 
-- We ran the full pipeline ourselves (`download_data.py` → `download_mrt.py` → `geocode_blocks.py` → `wrangle.py` → `make_tables.py` → `streamlit run app.py`) on our own computers.
+- We ran the full pipeline ourselves (`download_data.py` → `download_mrt.py` → `building_coords.py` → `geocode_blocks.py` → `wrangle.py` → `make_tables.py` → `make_figures.py` → `streamlit run app.py`) on our own computers.
 - We checked the cleaned data against the raw data (row counts, date range, example rows) and checked that medians in the dashboard match those computed directly in pandas.
 - We checked HDB's official list of mature estates (hdb.gov.sg) against the list in `wrangle.py`.
 - We spot-checked block locations on the map, compared the SVY21 conversion with the `pyproj` library and with OneMap for sample blocks, and reviewed the match-quality summary.
 - We read the regression output ourselves and wrote the interpretation as associations, not causes.
 - Deng Shenbojia ran `python src/make_figures.py` and `streamlit run app.py` himself (in a GitHub Codespace), checked the numbers in the dashboard screenshots against the README (and retook two screenshots so that the year settings matched), and read and edited the rewritten *Key findings* and *Limitations* so that he can explain every point. Deng Shenbojia used only Claude.
+- Ma Tianjiao reviewed pull requests from other members before merging them (with Claude's help reading the changes) and checked that the deployed dashboard loads and that its Overview numbers match the slides. Ma Tianjiao used only Claude.
 
 ## Responsibility
 

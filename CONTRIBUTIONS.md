@@ -14,15 +14,17 @@ This project was completed as group work for **DS608 Data Analytics for Economic
 | Location data (MRT, geocoding) | ● | | |
 | Analysis and interpretation | | | ● |
 | Dashboard (`app.py`) | ● | ○ | |
-| Presentation deck | | ● | ○ |
+| Presentation deck | ● | ● | ○ |
 | Repository organisation and review | ● | ○ | ○ |
 
 Use ● for main responsibility and ○ for support.
 
 ## Ma Tianjiao
 
-- Found the HDB dataset and wrote the download and cleaning scripts; built the first version of the dashboard; added MRT distance and the map after TA feedback.
-- Coordinated the shared GitHub workflow, keeping project code, data documentation, analysis outputs, and presentation materials organised. Helped review changes submitted through branches and pull requests before they were merged into `main`.
+- **Topic and data:** chose the topic, found the HDB resale dataset and the MRT and block-location sources, and built the pipeline in `src/` (download, block locations, geocoding, cleaning, summary tables) with help from Claude (see AI_USAGE.md).
+- **Dashboard:** built the Streamlit dashboard (`app.py`) with help from Claude and revised it after feedback from the TA (MRT and CBD distance, map, regression, "Help me choose") and the instructor (price per sqm by default, "Compare similar flats only", excluding the incomplete year 2026, reporting both % and S$ change, and the "About & method" tab).
+- **Coordination and review:** set up the GitHub repository, split the tasks, reviewed and merged pull requests from Sun Jiayi, and deployed the dashboard on Streamlit Community Cloud.
+- **Presentation:** drafted the slide deck with help from Claude (see AI_USAGE.md).
 
 
 ## Sun Jiayi
@@ -40,7 +42,7 @@ Use ● for main responsibility and ○ for support.
 
 ## How we worked together
 
-- One shared GitHub repository; each member worked on their own branch and opened pull requests, which another member reviewed before merging into `main`.
+- One shared GitHub repository; each member worked on their own branch and opened pull requests. Ma Tianjiao reviewed and merged the pull requests from Sun Jiayi; Deng Shenbojia merged his own pull requests.
 - We held weekly meetings on Mondays to set our work plan for the week, and used a group chat to discuss and adjust the details.
 
 ## Personal portfolio statement (template)
