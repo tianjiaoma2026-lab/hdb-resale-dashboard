@@ -6,7 +6,7 @@ DS608 Data Analytics for Economics · Group project · Singapore Management Univ
 
 **Group members:** Ma Tianjiao · Sun Jiayi · Deng Shenbojia
 
-**Live dashboard:** _link will be added after deployment on Streamlit Community Cloud_
+**Live dashboard:** https://hdb-resale-ds608.streamlit.app
 
 > This repository is our project report. It contains the code, data documentation, results and limitations.
 > This project was completed as **MDSE group work**; see [CONTRIBUTIONS.md](CONTRIBUTIONS.md) for who did what.
@@ -16,6 +16,8 @@ DS608 Data Analytics for Economics · Group project · Singapore Management Univ
 ## 1. Motivation
 
 As international students, one of the first things we had to do in Singapore was find a place to rent, and rent depends a lot on how expensive an area is. Most Singapore residents live in HDB flats, and every resale transaction is published as open data. We also kept hearing that prices went up sharply after COVID, so we wanted to check this with real data and understand **what makes some flats and places more expensive than others**.
+
+For one of us it is also a family question: Ma Tianjiao's aunt has lived and worked in Singapore for twenty years and is now planning to buy an HDB flat. Knowing what prices are normal in each area is useful before talking to an agent, whether you are buying or looking for a room to rent. We built the dashboard for people who do not know the Singapore property market well.
 
 ## 2. Research questions
 
@@ -156,7 +158,7 @@ _Numbers come from `python src/make_tables.py` and charts from `python src/make_
 
 - **The typical 4-room flat now costs much more.** The median price was **$400,000 in 2019** and **$630,000 in 2025**, so it went up by **$230,000 (+57%)**. The price per square metre went up by about the same amount (+58%, from $4,188 to $6,634).
 - **The rise was slow at first, then fast, and has now slowed down.** Prices hardly moved before 2020. Compared with 2019, the price per sqm was +6% in 2020, +19% in 2021, +39% in 2023 and +58% in 2025 ([table](outputs/tables/yearly_change_vs_2019_4room.csv)). Since mid-2025 the quarterly median has stayed around $630,000.
-- **Some towns went up much more than others** ([table](outputs/tables/town_growth_4room.csv)). The biggest % increases were in **Central Area (+86%)**, **Sembawang (+82%)**, **Clementi (+80%)** and **Toa Payoh (+77%)**. The smallest were in **Marine Parade (+35%)**, **Queenstown (+36%)** and **Bukit Merah (+36%)**.
+- **Some towns went up much more than others** ([table](outputs/tables/town_growth_4room.csv)). The biggest % increases in the median total price were in **Central Area (+86%)**, **Sembawang (+82%)**, **Clementi (+80%)** and **Toa Payoh (+77%)**. The smallest were in **Marine Parade (+35%)**, **Queenstown (+36%)** and **Bukit Merah (+36%)**.
 
 ![Change in median 4-room price by town, 2019 to 2025](outputs/figures/02_town_growth_ranking.png)
 
