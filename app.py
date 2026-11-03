@@ -811,11 +811,11 @@ with tab_map:
             st.info("No sales to show for these settings.")
         else:
             highest_price_town = (
-                blocks.groupby("town")["price_per_sqm"].median().idxmax()
+                recent_map.groupby("town")["price_per_sqm"].median().idxmax()
             )
             st.subheader(
-                f"Among mapped blocks, {highest_price_town} had the highest median price "
-                f"per sqm for {flat_type} flats"
+                f"{highest_price_town} had the highest median price per sqm "
+                f"for {flat_type} flats sold in the last 24 months"
             )
             low, high = blocks["price_per_sqm"].quantile([0.05, 0.95])
             fig = px.scatter_map(

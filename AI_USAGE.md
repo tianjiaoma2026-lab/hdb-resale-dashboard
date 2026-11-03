@@ -1,13 +1,13 @@
 # AI Usage Statement
 
-> **Draft — please review together as a group before submission.** Edit anything that does not match what you actually did, and add any other AI tools members used (e.g. ChatGPT, GitHub Copilot).
+> This statement summarises how generative AI tools supported the project and how their outputs were reviewed by the team.
 
 ## Tools used
 
 | Tool | Link | Used by |
 |---|---|---|
 | Claude (Anthropic) | https://claude.ai | Ma Tianjiao, Deng Shenbojia |
-| _add other tools here_ | | |
+| GitHub Copilot | https://github.com/features/copilot | Sun Jiayi |
 
 ## How we used GenAI
 
@@ -19,6 +19,8 @@ We acknowledge the use of **Claude (Anthropic)** to support **coding, debugging,
 - **Documentation:** draft `README.md`, `data/DATA_SOURCES.md` and this file.
 - **Figures and interpretation (Deng Shenbojia):** Assist in writing `src/make_figures.py` for the static Matplotlib and Seaborn charts in `outputs/figures/`; explain the findings to me (e.g. why % and S$ rankings differ, why MRT distance and lease length are mixed together) and suggest plainer wording for the *Key findings* and *Limitations* sections of the README.
 
+Sun Jiayi used **GitHub Copilot** to refine dashboard titles and text in `app.py`, and to check project files for details and consistency.
+
 The types of prompts used included: describing our research question and the proposal feedback, asking how to clean specific columns (e.g. `"61 years 04 months"`), asking for a dashboard layout that tells a clear story, and pasting error messages for debugging.
 
 ## How we checked the output
@@ -29,7 +31,6 @@ The types of prompts used included: describing our research question and the pro
 - We spot-checked block locations on the map, compared the SVY21 conversion with the `pyproj` library and with OneMap for sample blocks, and reviewed the match-quality summary.
 - We read the regression output ourselves and wrote the interpretation as associations, not causes.
 - Deng Shenbojia ran `python src/make_figures.py` and `streamlit run app.py` himself (in a GitHub Codespace), checked the numbers in the dashboard screenshots against the README (and retook two screenshots so that the year settings matched), and read and edited the rewritten *Key findings* and *Limitations* so that he can explain every point. Deng Shenbojia used only Claude.
-- _Add any other checks you did._
 
 ## Responsibility
 
