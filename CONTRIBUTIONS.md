@@ -42,9 +42,5 @@ Use ● for main responsibility and ○ for support.
 
 ## How we worked together
 
-- One shared GitHub repository; each member worked on their own branch and opened pull requests. Ma Tianjiao reviewed and merged the pull requests from Sun Jiayi; Deng Shenbojia merged his own pull requests.
+- One shared GitHub repository; each member worked on their own branch and opened pull requests. Ma Tianjiao reviewed and merged the pull requests from Sun Jiayi. Deng Shenbojia merged his own pull requests, and Ma Tianjiao merged her own documentation pull request (#8), without a separate review.
 - We held weekly meetings on Mondays to set our work plan for the week, and used a group chat to discuss and adjust the details.
-
-## Personal portfolio statement (template)
-
-> This project was completed as part of DS608: Data Analytics for Economics in a group of 3 students. My main contributions were [specific tasks], with particular responsibility for [brief detail]. I also contributed to [secondary task], helped prepare the final presentation, and reviewed the GitHub repository to ensure that the project was clearly documented and reproducible.
