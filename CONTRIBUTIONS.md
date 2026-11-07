@@ -12,9 +12,9 @@ This project was completed as group work for **DS608 Data Analytics for Economic
 | Data download and documentation | ● | | |
 | Data cleaning (`src/wrangle.py`) | ● | | |
 | Location data (MRT, geocoding) | ● | | |
-| Analysis and interpretation | | | ● |
+| Analysis and interpretation | | ○ | ● |
 | Dashboard (`app.py`) | ● | ○ | |
-| Presentation deck | ● | ● | ○ |
+| Presentation deck | ● | ○ | ○ |
 | Repository organisation and review | ● | ○ | ○ |
 
 Use ● for main responsibility and ○ for support.
@@ -29,9 +29,9 @@ Use ● for main responsibility and ○ for support.
 
 ## Sun Jiayi
 
-- Refining `app.py`, including clarifying dashboard logic and polishing the English wording of titles, explanatory text, and chart labels.
-- Reviewing and updating the dashboard and project Markdown files to keep their descriptions, methods, and findings consistent.
-- Preparing the PowerPoint presentation and supporting presentation materials.
+- **Dashboard refinement:** revised `app.py` to clarify dashboard logic and improve user-facing English. Updated titles to present data-driven conclusions that respond to dashboard selections, and polished explanatory text, chart labels, and other interface copy.
+- **Documentation and consistency checks:** reviewed the dashboard against the project documentation, revised Markdown files including `CONTRIBUTIONS.md` and `AI_USAGE.md`, and checked that descriptions of the methods and findings remained consistent with the dashboard and README.
+- **Presentation:** prepared supporting presentation materials and presented slides 4–6 and 10.
 
 ## Deng Shenbojia
 
